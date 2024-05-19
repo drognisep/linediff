@@ -170,3 +170,59 @@ func TestTokenReader_AcceptToken(t *testing.T) {
 		})
 	}
 }
+
+func TestTokenReader_UntilToken(t *testing.T) {
+	tests := map[string]struct {
+		input       string
+		searchToken string
+		token       string
+		found       bool
+	}{
+		"Empty string": {
+			input:       "",
+			searchToken: "blah",
+			token:       "",
+			found:       false,
+		},
+		"Not next token": {
+			input:       "some blah",
+			searchToken: "blah",
+			token:       "some ",
+			found:       true,
+		},
+		"Found first": {
+			input:       "blah some",
+			searchToken: "blah",
+			token:       "",
+			found:       true,
+		},
+		"Case sensitive": {
+			input:       "BLAHblah some",
+			searchToken: "blah",
+			token:       "BLAH",
+			found:       true,
+		},
+		"Stops at first match": {
+			input:       "halbblahblah",
+			searchToken: "blah",
+			token:       "halb",
+			found:       true,
+		},
+		"Doesn't match missing token": {
+			input:       "flamingo",
+			searchToken: "blah",
+			token:       "",
+			found:       false,
+		},
+	}
+
+	for name, tc := range tests {
+		tc := tc
+		t.Run(name, func(t *testing.T) {
+			tr := NewStringTokenReader(tc.input)
+			token, found := tr.UntilToken(tc.searchToken)
+			assert.Equal(t, tc.token, token)
+			assert.Equal(t, tc.found, found)
+		})
+	}
+}

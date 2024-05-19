@@ -104,10 +104,36 @@ func (tr *TokenReader) Accept(list string) (string, bool) {
 	}
 }
 
-// TODO: Add UntilToken
+// UntilToken returns all from the input runes up to the token if it exists.
+// If the token is not found or the end of the stream is reached, then "" and false are returned, and all read runes are unread.
+// This will return "" and true if the token is the very next set of runes in the stream.
+// This can read the entire input into memory before unreading if the token doesn't exist past the current read point.
+func (tr *TokenReader) UntilToken(token string) (string, bool) {
+	keyRune := []rune(token)[0]
+	var buf strings.Builder
+
+	for {
+		text, found := tr.Until(string(keyRune))
+		if found {
+			buf.WriteString(text)
+		}
+		_, found = tr.AcceptToken(token)
+		if found {
+			tr.UnreadNumRunes(len(token))
+			return buf.String(), true
+		}
+		r, err := tr.ReadRune()
+		if err != nil || r == 0 {
+			tr.UnreadNumRunes(buf.Len())
+			return "", false
+		}
+		buf.WriteRune(r)
+	}
+}
 
 // Until reads until a rune in the list string matches, returning the read token if any runes were read.
 // The list is split to runes, and all unique runes are included in a match set.
+// This can read the entire input into memory if the runes do not exist past the current read point.
 func (tr *TokenReader) Until(list string) (string, bool) {
 	rs := []rune(list)
 	matchSet := map[rune]bool{}
