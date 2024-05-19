@@ -25,15 +25,12 @@ var SplitSpaces = SplitterFunc(func(s string) []string {
 			return tokens
 		}
 		tokens = append(tokens, token)
-		spaces, found := tr.Accept(" ")
-		if !found {
-			return tokens
-		}
-		sr := []rune(spaces)
-		if len(sr) > 1 {
-			for i := 0; i < len(sr)-1; i++ {
-				tokens = append(tokens, "")
+		for {
+			space, found := tr.AcceptToken(" ")
+			if !found {
+				break
 			}
+			tokens = append(tokens, space)
 		}
 	}
 })
@@ -106,6 +103,8 @@ func (tr *TokenReader) Accept(list string) (string, bool) {
 		return buf.String(), l > 0
 	}
 }
+
+// TODO: Add UntilToken
 
 // Until reads until a rune in the list string matches, returning the read token if any runes were read.
 // The list is split to runes, and all unique runes are included in a match set.

@@ -17,11 +17,11 @@ func TestSplitSpaces(t *testing.T) {
 		},
 		"Hello world": {
 			input:  "hello world",
-			tokens: []string{"hello", "world"},
+			tokens: []string{"hello", " ", "world"},
 		},
 		"Hello space world": {
 			input:  "hello  world",
-			tokens: []string{"hello", "", "world"},
+			tokens: []string{"hello", " ", " ", "world"},
 		},
 	}
 
