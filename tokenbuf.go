@@ -7,17 +7,16 @@ import (
 )
 
 type Splitter interface {
-	Split(s string) []string
+	Split(tr *TokenReader) []string
 }
 
-type SplitterFunc func(s string) []string
+type SplitterFunc func(tr *TokenReader) []string
 
-func (f SplitterFunc) Split(s string) []string {
-	return f(s)
+func (f SplitterFunc) Split(tr *TokenReader) []string {
+	return f(tr)
 }
 
-var SplitSpaces = SplitterFunc(func(s string) []string {
-	tr := NewStringTokenReader(s)
+var SplitSpaces = SplitterFunc(func(tr *TokenReader) []string {
 	var tokens []string
 	for {
 		token, found := tr.Until(" ")

@@ -2,6 +2,7 @@ package linediff
 
 import (
 	"fmt"
+	"github.com/drognisep/runebuffer"
 	"strings"
 )
 
@@ -60,13 +61,20 @@ func (s *DiffSet) AddSimilarity(tokens ...string) {
 	s.Add(Same, tokens...)
 }
 
+func (s *DiffSet) Iterator() *DiffSetIterator {
+	return &DiffSetIterator{set: s}
+}
+
 func Diff(a, b string) *DiffSet {
 	return DiffSplit(a, b, SplitSpaces)
 }
 
 // DiffCrossConfidence determines how many tokens the cross comparison phase will look ahead before giving up.
 // This can be tuned according to the length of the incoming data set to emit more or less verbose diffs.
-var DiffCrossConfidence = 3
+var (
+	DiffCrossConfidence = 3
+	BufferSize          = runebuffer.DefaultBufferSize
+)
 
 func DiffSplit(a, b string, split Splitter) *DiffSet {
 	if split == nil {
@@ -75,9 +83,9 @@ func DiffSplit(a, b string, split Splitter) *DiffSet {
 
 	var (
 		ds      = new(DiffSet)
-		as      = split.Split(a)
+		as      = split.Split(NewStringTokenReaderWithSize(a, BufferSize))
 		aOffset int
-		bs      = split.Split(b)
+		bs      = split.Split(NewStringTokenReaderWithSize(b, BufferSize))
 		bOffset int
 		maxi    = max(len(as), len(bs))
 	)
@@ -123,4 +131,18 @@ loop:
 		ds.AddAddition(bs[bi])
 	}
 	return ds
+}
+
+type DiffSetIterator struct {
+	set     *DiffSet
+	current int
+}
+
+func (i *DiffSetIterator) Next() (string, Tag, bool) {
+	if i.current >= len(i.set.segments) {
+		return "", 0, false
+	}
+	s, t := i.set.segments[i.current], i.set.tags[i.current]
+	i.current++
+	return s, t, true
 }

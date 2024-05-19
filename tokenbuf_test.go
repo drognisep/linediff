@@ -27,7 +27,7 @@ func TestSplitSpaces(t *testing.T) {
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			tokens := SplitSpaces.Split(tc.input)
+			tokens := SplitSpaces.Split(NewStringTokenReader(tc.input))
 			assert.Equal(t, tc.tokens, tokens)
 		})
 	}

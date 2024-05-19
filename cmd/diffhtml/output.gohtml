@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Diff Output</title>
+	<style>
+		:root {
+            font-size: 150%;
+		}
+		* {
+			box-sizing: border-box;
+		}
+		html {
+			padding: 0;
+			margin: 0;
+		}
+		body {
+			padding: 16px;
+			margin: 0;
+		}
+		table {
+			width: 100%;
+			border: 1px solid black;
+			border-radius: 4px;
+			border-collapse: collapse;
+		}
+		td {
+			border-left: 1px solid black;
+			margin: 0;
+		}
+		td:first-child {
+			border-left: inherit;
+		}
+		tr {
+			border-bottom: 1px solid black;
+		}
+		tr:last-child {
+			border-bottom: inherit;
+		}
+		th {
+			border-left: 1px solid black;
+			padding: 2px 6px;
+		}
+		th:first-child {
+			border-left: inherit;
+		}
+		.rem {
+			background-color: red;
+			color: white;
+		}
+		.add {
+            background-color: green;
+            color: white;
+		}
+		span {
+			margin: 0 1px;
+		}
+	</style>
+</head>
+<h1 id="context">Context</h1>
+<p>
+	Diff comparison for file <code>{{.FileName}}</code>
+</p>
+<h2 id="diff-heading">Differences Table</h2>
+<table>
+	<tr>
+		<th>{{.HeaderA}}</th>
+		<th>{{.HeaderB}}</th>
+		<th>Difference</th>
+	</tr>
+	{{- if not .Records}}
+	<tr>
+		<td colspan="3">
+			<strong>No records found</strong>
+		</td>
+	</tr>
+	{{- else }}
+        {{- range .Records }}
+	<tr>
+		<td>{{.A}}</td>
+		<td>{{.B}}</td>
+		<td>{{.DiffHTML}}</td>
+	</tr>
+        {{- end }}
+	{{- end }}
+</table>
+</html>
