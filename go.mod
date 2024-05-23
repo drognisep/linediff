@@ -1,4 +1,4 @@
-module linediff
+module github.com/drognisep/linediff
 
 go 1.22
 

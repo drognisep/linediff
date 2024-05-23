@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"linediff"
+	"github.com/drognisep/linediff"
 	"strings"
 )
 

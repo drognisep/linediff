@@ -15,7 +15,11 @@ var (
 	ErrInvalidColIndex = errors.New("invalid column index")
 	//go:embed output.gohtml
 	templText string
-	templ     = template.Must(template.New("html").Parse(templText))
+	templ     = template.Must(template.New("html").Funcs(map[string]any{
+		"plusOne": func(i int) int {
+			return i + 1
+		},
+	}).Parse(templText))
 )
 
 func runFileGeneration(config *Config) error {

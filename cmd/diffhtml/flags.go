@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/drognisep/linediff"
 	flag "github.com/spf13/pflag"
-	"linediff"
 )
 
 type Config struct {

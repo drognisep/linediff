@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"linediff"
+	"github.com/drognisep/linediff"
 	"log"
 	"os"
 )
@@ -37,6 +37,7 @@ func main() {
 			flags.Usage()
 			os.Exit(1)
 		}
+		return
 	}
 
 	if flags.NArg() < 2 {

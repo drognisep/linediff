@@ -5,6 +5,7 @@
 	<style>
 		:root {
             font-size: 150%;
+			--border: 1px solid black;
 		}
 		* {
 			box-sizing: border-box;
@@ -19,7 +20,7 @@
 		}
 		table {
 			width: 100%;
-			border: 1px solid black;
+			border: var(--border);
 			border-radius: 4px;
 			border-collapse: collapse;
 		}
@@ -63,24 +64,24 @@
 <h2 id="diff-heading">Differences Table</h2>
 <table>
 	<tr>
+		<th>#</th>
 		<th>{{.HeaderA}}</th>
 		<th>{{.HeaderB}}</th>
 		<th>Difference</th>
 	</tr>
-	{{- if not .Records}}
+	{{- range $index, $record := .Records }}
 	<tr>
-		<td colspan="3">
+		<td>{{plusOne $index}}</td>
+		<td>{{$record.A}}</td>
+		<td>{{$record.B}}</td>
+		<td>{{$record.DiffHTML}}</td>
+	</tr>
+	{{- else }}
+	<tr>
+		<td colspan="4">
 			<strong>No records found</strong>
 		</td>
 	</tr>
-	{{- else }}
-        {{- range .Records }}
-	<tr>
-		<td>{{.A}}</td>
-		<td>{{.B}}</td>
-		<td>{{.DiffHTML}}</td>
-	</tr>
-        {{- end }}
 	{{- end }}
 </table>
 </html>
